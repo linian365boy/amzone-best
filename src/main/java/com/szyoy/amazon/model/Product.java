@@ -104,6 +104,6 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product[productName='"+productName+"', category='"+category+"', parentCategory='"+parentCategory+"']";
+        return "Product[id='"+id+"', productName='"+productName+"', category='"+category+"', parentCategory='"+parentCategory+"']";
     }
 }

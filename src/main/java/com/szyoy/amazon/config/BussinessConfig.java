@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "page")
 public class BussinessConfig {
-    private int pageSize;
+    private int size;
 
-    public int getPageSize() {
-        return pageSize;
-    }
+	public int getSize() {
+		return size;
+	}
 
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
+	public void setSize(int size) {
+		this.size = size;
+	}
 }

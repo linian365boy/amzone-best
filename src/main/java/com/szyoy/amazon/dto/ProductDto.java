@@ -1,5 +1,8 @@
 package com.szyoy.amazon.dto;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 /**
  * @author niange
  * @ClassName: ProductDto
@@ -10,11 +13,13 @@ package com.szyoy.amazon.dto;
 public class ProductDto {
     private String productName;
     private String category;
-    private int reviewsStart;
-    private int reviewsEnd;
+    private Integer reviewsStart;
+    private Integer reviewsEnd;
     private String stars;
-    private double priceStart;
-    private double priceEnd;
+    private Double priceStart;
+    private Double priceEnd;
+    private String sortBy = "id";
+    private String order = "desc";
 
     public String getProductName() {
         return productName;
@@ -32,19 +37,19 @@ public class ProductDto {
         this.category = category;
     }
 
-    public int getReviewsStart() {
+    public Integer getReviewsStart() {
         return reviewsStart;
     }
 
-    public void setReviewsStart(int reviewsStart) {
+    public void setReviewsStart(Integer reviewsStart) {
         this.reviewsStart = reviewsStart;
     }
 
-    public int getReviewsEnd() {
+    public Integer getReviewsEnd() {
         return reviewsEnd;
     }
 
-    public void setReviewsEnd(int reviewsEnd) {
+    public void setReviewsEnd(Integer reviewsEnd) {
         this.reviewsEnd = reviewsEnd;
     }
 
@@ -56,19 +61,40 @@ public class ProductDto {
         this.stars = stars;
     }
 
-    public double getPriceStart() {
+    public Double getPriceStart() {
         return priceStart;
     }
 
-    public void setPriceStart(double priceStart) {
+    public void setPriceStart(Double priceStart) {
         this.priceStart = priceStart;
     }
 
-    public double getPriceEnd() {
+    public Double getPriceEnd() {
         return priceEnd;
     }
 
-    public void setPriceEnd(double priceEnd) {
+    public void setPriceEnd(Double priceEnd) {
         this.priceEnd = priceEnd;
+    }
+    
+    public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+	
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	@Override
+    public String toString() {
+    	return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

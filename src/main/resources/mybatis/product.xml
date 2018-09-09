@@ -3,28 +3,58 @@
 
 <mapper namespace="com.szyoy.amazon.dao.ProductDao">
     <select id="findProducts" resultType="com.szyoy.amazon.model.Product" parameterType="com.szyoy.amazon.dto.ProductDto">
-        select * from tb_product where 1=1
-        <if test="param.productName!=null and param.productName!=''">
+        select * from tb_product 
+        <where>
+        	<if test="param.productName!=null and param.productName!=''">
             and productName like concat('%', #{param.productName}, '%')
-        </if>
-        <if test="param.category!=null and param.category!=''">
-            and category like concat('%',#{param.category},'%') or parentCategory like concat('%',#{param.category},'%')
-        </if>
-        <if test="param.reviewsStart>0">
-            and reviews&gt;=#{param.reviewsStart}
-        </if>
-        <if test="param.reviewsEnd>0">
-            and reviews&lt;=#{param.reviewsEnd}
-        </if>
-        <if test="param.stars!=null and param.stars!=''">
-            and stars like concat('%', #{param.stars}, '%')
-        </if>
-        <if test="param.priceStart>0">
-            and price&gt;=#{param.priceStart}
-        </if>
-        <if test="param.priceEnd>0">
-            and price&lt;=#{param.priceEnd}
-        </if>
-        order by id desc limit #{start},#{pageSize}
+	        </if>
+	        <if test="param.category!=null and param.category!=''">
+	            and category like concat('%',#{param.category},'%') or parentCategory like concat('%',#{param.category},'%')
+	        </if>
+	        <if test="param.reviewsStart>0">
+	            and reviews&gt;=#{param.reviewsStart}
+	        </if>
+	        <if test="param.reviewsEnd>0">
+	            and reviews&lt;=#{param.reviewsEnd}
+	        </if>
+	        <if test="param.stars!=null and param.stars!=''">
+	            and stars like concat('%', #{param.stars}, '%')
+	        </if>
+	        <if test="param.priceStart>0">
+	            and price&gt;=#{param.priceStart}
+	        </if>
+	        <if test="param.priceEnd>0">
+	            and price&lt;=#{param.priceEnd}
+	        </if>
+        </where>
+        order by ${param.sortBy} ${param.order} limit #{start},#{pageSize}
+    </select>
+    
+    <select id="countProducts" resultType="long" parameterType="com.szyoy.amazon.dto.ProductDto">
+		select count(id) from tb_product 
+		<where>
+			<if test="param.productName!=null and param.productName!=''">
+            	and productName like concat('%', #{param.productName}, '%')
+	        </if>
+	        <if test="param.category!=null and param.category!=''">
+	            and category like concat('%',#{param.category},'%') or parentCategory like concat('%',#{param.category},'%')
+	        </if>
+	        <if test="param.reviewsStart>0">
+	            and reviews&gt;=#{param.reviewsStart}
+	        </if>
+	        <if test="param.reviewsEnd>0">
+	            and reviews&lt;=#{param.reviewsEnd}
+	        </if>
+	        <if test="param.stars!=null and param.stars!=''">
+	            and stars like concat('%', #{param.stars}, '%')
+	        </if>
+	        <if test="param.priceStart>0">
+	            and price&gt;=#{param.priceStart}
+	        </if>
+	        <if test="param.priceEnd>0">
+	            and price&lt;=#{param.priceEnd}
+	        </if>
+		</where> 
+		limit 1
     </select>
 </mapper>

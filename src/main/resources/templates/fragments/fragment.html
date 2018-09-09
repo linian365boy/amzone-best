@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="headJsCss" id="headJsCss">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="format-detection" content="telephone=no,email=no,address=no"/>
+    <meta name="renderer" content="webkit"/>
+    <meta property="og:url" th:content="szyoy"/>
+    <meta name="description" th:content="szyoy"/>
+    <link rel="canonical" th:href="www.szyoy.com"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/bootstrap/css/bootstrap.min.css}"/>
+</head>
+
+
+<footer th:fragment="footerCssJs" id="footerCssJs">
+    <script type="text/javascript" th:src="@{/js/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+</footer>
+
+<nav th:fragment="pagination" aria-label="Page navigation" style="text-align:center;" th:if="${dto.maxPageNo gt 0}">
+    <ul class="pager">
+		<li th:class="${dto.currentPageNo==1?'disabled':''}">
+			<a th:if="${dto.currentPageNo!=1}" href="javascript:void(0);" th:onclick="'searchProducts('+${dto.currentPageNo-1}+')'">Previous</a>
+			<a th:if="${dto.currentPageNo==1}">Previous</a>
+		</li>
+    	<li th:class="${dto.currentPageNo==dto.maxPageNo?'disabled':''}">
+    		<a th:if="${dto.currentPageNo!=dto.maxPageNo}" href="javascript:void(0);" th:onclick="'searchProducts('+${dto.currentPageNo+1}+')'">Next</a>
+    		<a th:if="${dto.currentPageNo==dto.maxPageNo}">Next</a>
+    	</li>
+    </ul>
+</nav>
+
+</html>

@@ -28,6 +28,17 @@
                 <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [${springAppName}]  [%thread] %-5level %logger{36} - %msg%n</pattern>
             </encoder>
         </appender>
+        
+       <appender name="sql-queue" class="ch.qos.logback.classic.AsyncAppender">
+       		<queueSize>512</queueSize>
+        	<appender-ref ref="rollingFile"/>
+       </appender>
+       
+       <!-- mybatis loggers -->
+	    <logger name="dao" level="DEBUG" additivity="false">
+	        <appender-ref ref="sql-queue"/>
+	    </logger>
+               
         <root level="INFO">
             <appender-ref ref="rollingFile"/>
         </root>

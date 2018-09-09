@@ -1,6 +1,57 @@
 spring:
   application:
     name: amzone-best
+  datasource:
+    druid:
+      url: ${jdbc.url}
+      username: ${jdbc.username}
+      password: ${jdbc.password}
+      driver-class-name: com.mysql.jdbc.Driver
+      initial-size: 5
+      max-active: 8
+      pool-prepared-statements: false
+      max-open-prepared-statements: -1
+      validation-query: select 'x'
+      validation-query-timeout: 5
+      test-while-idle: true
+  profiles:
+    active: mac_local
+  http:
+    encoding:
+      force: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    content-type: text/html
+    cache: false
+  mvc:
+    favicon:
+      enabled: false
+      
+
+mybatis:
+  type-aliases-package: com.szyoy.amazon.model
+  mapper-locations: classpath:mybatis/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
 
 page:
   size: ${page.size}
+
+
+server:
+  port: 8081
+---
+spring:
+  profiles: mac_local
+server:
+  port: 8082
+---
+spring:
+  profiles: prd
+server:
+  port: 8080

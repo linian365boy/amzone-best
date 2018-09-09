@@ -20,6 +20,6 @@ public interface ProductDao {
 
     List<Product> findProducts(@Param("param") ProductDto param,@Param("start") int start, @Param("pageSize") int limit);
 
-    long countProducts(ProductDto param);
+    long countProducts(@Param("param") ProductDto param);
 
 }

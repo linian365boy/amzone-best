@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="keywords" content="amzone best sellers"/>
+    <title>Home</title>
+    <head th:replace="fragments/fragment :: headJsCss"></head>
+    <script type="text/javascript">
+    /*<![CDATA[*/
+    	function searchProducts(pageno){
+    		formValue = $('#form').serialize();
+    		$.ajax({
+    			type: 'post',
+    			url: '/products/'+pageno,
+    			data: formValue,
+    			success: function(data){
+    				$('#databody').empty();
+    				var p_size = data.content.length;
+    				str = ''
+    				for(i=0;i<p_size;i++){
+    					str += '<tr>';
+    					str += '<th scope="row" >'+((data.currentPageNo-1)*15+(i+1))+'</th>';
+    					str += '<td><img src="'+data.content[i].imageUrl+'" title="'+data.content[i].productName+'"></img></td>';
+    					str += '<td>'+data.content[i].productName+'</td>';
+    					str += '<td>'+data.content[i].category+'</td>';
+    					str += '<td>'+data.content[i].parentCategory+'</td>';
+    					str += '<td><a href="'+data.content[i].url+'" target="_blank">'+data.content[i].url.substring(0,10)+'...</a></td>';
+    					str += '<td>'+data.content[i].reviews+'</td>';
+    					str += '<td>'+data.content[i].stars+'</td>';
+    					str += '<td>'+data.content[i].price+'</td>';
+    				}
+    				$('#databody').append(str);
+    				$('ul.pager').empty();
+    				maxPageNo = data.maxPageNo;
+    				currentPageNo = data.currentPageNo;
+    				if(maxPageNo>0){
+    					pageStr = '';
+    					if(currentPageNo == 1){
+    						pageStr += '<li class="disabled"><a>Previous</a></li>';
+    					}else if(currentPageNo != 1){
+    						pageStr += '<li><a href="javascript:void(0);" onclick="searchProducts('+(currentPageNo-1)+');">Previous</a></li>';
+    					}
+    					if(currentPageNo == maxPageNo){
+    						pageStr += '<li class="disabled"><a>Next</a></li>';
+    					}else if(currentPageNo != maxPageNo){
+    						pageStr += '<li><a href="javascript:void(0);" onclick="searchProducts('+(currentPageNo+1)+');">Next</a></li>';
+    					}
+    					$('ul.pager').append(pageStr);
+    				}
+    			}
+    		});
+    	}
+    /*]]>*/
+    </script>
+    
+</head>
+<body>
+	<div class="container bs-docs-container">
+	<br/>
+		<br/>
+		<br/>
+		<br/>
+		
+		<form class="form-inline" id="form">
+		  <div class="form-group">
+		    <label class="sr-only" for="productNameInput">product name</label>
+		    <input type="text" class="form-control" id="productNameInput" name="productName" placeholder="product name"/>
+		  </div>
+		  <div class="form-group">
+		    <label class="sr-only" for="categoryInput">category</label>
+		    <input type="text" class="form-control" id="categoryInput" name="category" placeholder="category"/>
+		  </div>
+		  <div class="form-group">
+		    <label class="sr-only" for="categoryInput">parent category</label>
+		    <input type="text" class="form-control" id="parentCategoryInput" name="parentCategory" placeholder="parent category"/>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label class="sr-only" for="stars">stars</label>
+		    <input type="text" class="form-control" id="stars" name="stars" placeholder="stars"/>
+		  </div>
+		  
+		  <div class="form-group">
+		    <label class="sr-only" for="reviewsStart">reviews start</label>
+		    <input type="text" class="form-control" id="reviewsStart" name="reviewsStart" placeholder="reviews start"/>
+		    -
+		    <label class="sr-only" for="reviewsEnd">reviews end</label>
+		    <input type="text" class="form-control" id="reviewsEnd" name="reviewsEnd" placeholder="reviews end"/>
+		  </div>
+		
+		<div class="form-group">
+		    <label class="sr-only" for="priceStart">price start</label>
+		    <input type="text" class="form-control" id="priceStart" name="priceStart" placeholder="price start"/>
+		    -
+		    <label class="sr-only" for="priceEnd">price end</label>
+		    <input type="text" class="form-control" id="priceEnd" name="priceEnd" placeholder="price end"/>
+		  </div>
+		  &nbsp;&nbsp;&nbsp;&nbsp;
+		  <div class="form-group">
+		  <label >Sort by</label>
+		  <select class="form-control" name="sortBy">
+			  <option value="id">id</option>
+			  <option value="productName">product name</option>
+			  <option value="reviews">reviews</option>
+			  <option value="stars">stars</option>
+			  <option value="price">price</option>
+			</select>
+			
+			<select class="form-control" name="order">
+			  <option value="desc">desc</option>
+			  <option value="asc">asc</option>
+			</select>
+		  </div>
+		  <button type="button" class="btn btn-info" onclick="searchProducts(1);">Search</button>
+		</form>
+		
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		
+		<table class="table table-hover table-bordered" id="datatable">
+		  <thead>
+	        <tr>
+	          <th>#</th>
+	          <th>Image</th>
+	          <th>Product Name</th>
+	          <th>Category</th>
+	          <th>Parent Category</th>
+	          <th>Amazon url</th>
+	          <th>Reviews</th>
+	          <th>Stars</th>
+	          <th>Price</th>
+	        </tr>
+	      </thead>
+	      <tbody id="databody">
+	        <tr th:each="product, stat:${dto.content}">
+	          <th scope="row" th:text="${stat.index + 1}"></th>
+	          <td><img th:src="${product.imageUrl}" th:title="${product.productName}"></img></td>
+	          <td th:text="${product.productName}"></td>
+	          <td th:text="${product.category}"></td>
+	          <td th:text="${product.parentCategory}"></td>
+	          <td><a th:href="${product.url}" target="_blank" th:text="${#strings.abbreviate(product.url,10)}"></a></td>
+	          <td th:text="${product.reviews}"></td>
+	          <td th:text="${product.stars}"></td>
+	          <td th:text="${product.price}"></td>
+	        </tr>
+	      </tbody>
+		</table>
+		
+		<nav th:replace="fragments/fragment :: pagination"></nav>
+		
+	</div>
+	
+<footer th:replace="fragments/fragment :: footerCssJs"></footer>
+</body>
+</html>
