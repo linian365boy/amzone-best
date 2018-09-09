@@ -45,7 +45,4 @@ public class MySQLConnections {
         return conn;
     }
 
-    public static void batchInsert(){
-
-    }
 }

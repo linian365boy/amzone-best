@@ -65,22 +65,28 @@ public class Tools {
                 products.add(product);
                 if(products.size() >= BATCH_SIZE){
                     // flush to db
-
                     try {
                         flushToDb(products);
                     }catch (SQLException e){
                         e.printStackTrace();
                     }
-
-                    System.out.println(products);
                     products.clear();
                 }
+            }
+            if(products.size() > 0) {
+            	// flush to db
+                try {
+                    flushToDb(products);
+                }catch (SQLException e){
+                }
+                products.clear();
             }
         }catch (IOException e){
             e.printStackTrace();
             System.exit(0);
         }
     }
+    
 
     public static void flushToDb(List<Product> products) throws SQLException {
         stmt = con.prepareStatement("insert into tb_product(id, productName, imageUrl, category, parentCategory, " +
@@ -98,8 +104,14 @@ public class Tools {
             stmt.setLong(9, System.currentTimeMillis()/1000);
             stmt.addBatch();
         }
-        stmt.executeBatch();
-        con.commit();
+        try {
+        	stmt.executeBatch();
+        }catch(Exception e) {
+        	System.err.println(e.getMessage());
+        }finally {
+        	stmt.close();
+        	con.commit();
+        }
     }
 
     private static String[] strToArray(String strLine) {
@@ -133,7 +145,7 @@ public class Tools {
 
 
     public static void main(String[] args){
-        String filePath = "/Users/niange/Documents/";
+        String filePath = "/Users/linian/Documents";
         File directory = new File(filePath);
         String[] fileNames = directory.list(new FilenameFilter() {
             @Override
@@ -145,7 +157,9 @@ public class Tools {
             }
         });
         for(String fileName : fileNames) {
+        	long start = System.currentTimeMillis();
             readCsv(filePath + File.separator + fileName);
+            System.out.println("fileName=> "+ fileName +" cost time => "+(System.currentTimeMillis() - start) + "ms");
         }
     }
 }
