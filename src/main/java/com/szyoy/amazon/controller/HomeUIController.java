@@ -13,7 +13,7 @@ import com.szyoy.amazon.dto.PageDto;
 import com.szyoy.amazon.dto.ProductDto;
 import com.szyoy.amazon.model.Product;
 import com.szyoy.amazon.service.BestSaleService;
-import com.szyoy.amazon.utils.SortTypeEnum;
+import SortTypeEnum;
 
 @Controller
 public class HomeUIController {

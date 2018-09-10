@@ -1,8 +1,3 @@
-package com.szyoy.amazon.utils;
-
-import com.szyoy.amazon.model.Product;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +34,11 @@ public class Tools {
             br.readLine();
             while ((line = br.readLine()) != null){
                 String[] lineStr = strToArray(line);
-                if(StringUtils.isBlank(lineStr[2]) && StringUtils.isBlank(lineStr[3])){
+                if(lineStr.length != 8){
+                    continue;
+                }
+                if(("".equals(lineStr[2]) && "".equals(lineStr[3])
+                        || ("----".equals(lineStr[2]) && "----".equals(lineStr[3])))){
                     continue;
                 }
                 product = new Product();
@@ -47,18 +46,26 @@ public class Tools {
                 product.setCategory(lineStr[1]);
                 product.setProductName(lineStr[2]);
                 product.setUrl(lineStr[3]);
-                if(StringUtils.isNotBlank(lineStr[4]) && !StringUtils.equals(lineStr[4], "----")) {
-                    product.setReviews(Integer.parseInt(lineStr[4].replace(",", "")));
+                if(!"".equals(lineStr[4]) && !"----".equals(lineStr[4])) {
+                    try {
+                        product.setReviews(Integer.parseInt(lineStr[4].replace(",", "")));
+                    }catch (Exception e){
+                        product.setReviews(0);
+                    }
                 }
                 product.setStars(lineStr[5]);
-                if(StringUtils.isNotBlank(lineStr[6]) && !StringUtils.equals(lineStr[6], "----")) {
+                if(!"".equals(lineStr[6]) && !"----".equals(lineStr[6])) {
                     if(lineStr[6].indexOf(",") > 0){
                         lineStr[6] = lineStr[6].replace(",", "");
                     }
-                    if(lineStr[6].indexOf("-") > 0){
-                        product.setPrice(Double.parseDouble(lineStr[6].split("-")[0].replace("$", "")));
-                    }else {
-                        product.setPrice(Double.parseDouble(lineStr[6].replace("$", "")));
+                    try {
+                        if (lineStr[6].indexOf("-") > 0) {
+                            product.setPrice(Double.parseDouble(lineStr[6].split("-")[0].replace("$", "")));
+                        } else {
+                            product.setPrice(Double.parseDouble(lineStr[6].replace("$", "")));
+                        }
+                    }catch (Exception e){
+                        product.setPrice(0);
                     }
                 }
                 product.setImageUrl(lineStr[7]);
@@ -125,7 +132,11 @@ public class Tools {
             if (semicolonFlg == 2) semicolonFlg = 0;
             if (strA.equals(",") && semicolonFlg == 0) {
                 if (strItem.startsWith("\"") && strItem.endsWith("\"")) {
-                    strItem = strItem.substring(1, strItem.length() - 1);
+                    try {
+                        strItem = strItem.substring(1, strItem.length() - 1);
+                    }catch (Exception e){
+                        continue;
+                    }
                 }
                 lstStr.add(strItem);
                 strItem = "";
@@ -135,9 +146,13 @@ public class Tools {
         }
         if (strItem.length() > 0) {
             if (strItem.startsWith("\"") && strItem.endsWith("\"")) {
-                strItem = strItem.substring(1, strItem.length() - 1);
+                try {
+                    strItem = strItem.substring(1, strItem.length() - 1);
+                    lstStr.add(strItem);
+                }catch (Exception e){
+
+                }
             }
-            lstStr.add(strItem);
         }
 
         return lstStr.toArray(new String[]{});
@@ -145,7 +160,7 @@ public class Tools {
 
 
     public static void main(String[] args){
-        String filePath = "/Users/linian/Documents";
+        String filePath = "/home/tanfan";
         File directory = new File(filePath);
         String[] fileNames = directory.list(new FilenameFilter() {
             @Override
